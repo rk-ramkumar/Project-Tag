@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0c36764aa41085d4f9ce1fd750ff7c2b
+guid: 5d001150c55419949b3643e9bd94cfc4
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -60,11 +60,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Walk Forward Gang
-      takeName: www.characters3d.com | Walk Forward Gang
-      internalID: 3959333562774704751
+      name: Walk Backward
+      takeName: www.characters3d.com | Walk Backward
+      internalID: -7986065248511397477
       firstFrame: 0
-      lastFrame: 60
+      lastFrame: 34
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

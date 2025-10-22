@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0c36764aa41085d4f9ce1fd750ff7c2b
+guid: 190aa7b9a51dd4a4aac98050c2bb61a9
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -35,7 +35,7 @@ ModelImporter:
       takeName: www.characters3d.com | T-Pose
       internalID: 9136620304992010541
       firstFrame: 0
-      lastFrame: 1
+      lastFrame: 2
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -60,18 +60,18 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Walk Forward Gang
-      takeName: www.characters3d.com | Walk Forward Gang
-      internalID: 3959333562774704751
+      name: Hi Wave
+      takeName: www.characters3d.com | Hi Wave
+      internalID: 6850613098262863654
       firstFrame: 0
-      lastFrame: 60
+      lastFrame: 140
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
