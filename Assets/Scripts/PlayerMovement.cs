@@ -17,12 +17,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float sprintSpeed = 8f;
     [SerializeField] private float acceleration = 6f;
     [SerializeField] private float rotationSpeed = 12f;
+    [SerializeField] private float jumpHeight= 2f;
     [SerializeField] private float gravity = -9.81f;
 
     private float currentSpeed;
     private float targetSpeed;
     private Vector3 velocity;
     private bool _isSprinting;
+    private bool wasGrounded;
     private Vector2 moveInput;
 
     [Header("Camera Settings")]
@@ -35,7 +37,10 @@ public class PlayerMovement : MonoBehaviour
     private InputAction moveAction;
     private InputAction sprintAction;
     private InputAction lookAction;
+    private InputAction jumpAction;
     private int velocityHash;
+    private int landHash;
+    private int jumpUpHash;
 
     public bool IsSprinting
     {
@@ -52,12 +57,15 @@ public class PlayerMovement : MonoBehaviour
         moveAction = playerActions.FindAction("move");
         sprintAction = playerActions.FindAction("Sprint");
         lookAction = playerActions.FindAction("Look");
+        jumpAction = playerActions.FindAction("Jump");
     }
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
         velocityHash = Animator.StringToHash("Velocity");
+        jumpUpHash = Animator.StringToHash("JumpUp");
+        landHash = Animator.StringToHash("Land");
         targetSpeed = walkSpeed;
 
         // Initialize yaw/pitch from current cameraPivot
@@ -128,6 +136,14 @@ public class PlayerMovement : MonoBehaviour
         // Gravity
         if (controller.isGrounded && velocity.y < 0)
             velocity.y = -2f;
+
+        //Apply Jump
+        if(jumpAction.WasPressedThisFrame() && controller.isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            wasGrounded = false;
+        }
+        
         velocity.y += gravity * Time.deltaTime;
 
         // Apply motion
@@ -142,6 +158,15 @@ public class PlayerMovement : MonoBehaviour
         float normalizedSpeed = Mathf.InverseLerp(0f, sprintSpeed, speed);
 
         animator.SetFloat(velocityHash, normalizedSpeed);
+        //if(!wasGrounded && controller.isGrounded)
+        //{
+        //    animator.SetTrigger(landHash);
+        //    wasGrounded = true;
+        //}
+        //if(wasGrounded && !controller.isGrounded)
+        //{
+        //    animator.SetTrigger(jumpUpHash);
+        //}
     }
 
     void OnMove(InputAction.CallbackContext context)
