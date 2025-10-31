@@ -1,4 +1,5 @@
 using StarterAssets;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -119,6 +120,18 @@ namespace TPP
             _fallTimeoutDelta = FallTimeout;
         }
 
+        void Update()
+        {
+            _hasAnimator = TryGetComponent(out _animator);
+
+            GroundedCheck();
+        }
+
+        void LateUpdate()
+        {
+            CameraRotation();
+        }
+
         private void AssignAnimatorIDs()
         {
             _animIDSpeed = Animator.StringToHash("Speed");
@@ -127,8 +140,20 @@ namespace TPP
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
         }
-        // Update is called once per frame
-        void Update()
+        private void GroundedCheck()
+        {
+            Vector3 spherePosition = transform.position;
+            spherePosition.y -= GroundedOffset;
+            Grounded = Physics.CheckSphere(spherePosition, _controller.radius, GroundLayers, 
+                QueryTriggerInteraction.Ignore);
+
+            if(_hasAnimator)
+            {
+                _animator.SetBool(_animIDGrounded, Grounded);
+            }
+
+        }
+        private void CameraRotation()
         {
 
         }
