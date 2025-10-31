@@ -12,6 +12,7 @@ namespace TPP
         public Vector2 look;
         public bool jump;
         public bool sprint;
+        public bool sprintMode = false;
 
         [Header("Movement Settings")]
         public bool analogMovement;
@@ -63,7 +64,12 @@ namespace TPP
 
         public void SprintInput(bool newSprintState)
         {
-            sprint = newSprintState;
+            if(newSprintState)
+            {
+                sprintMode = !sprintMode;
+                sprint = sprintMode;
+            }
+            
         }
 
         private void OnApplicationFocus(bool hasFocus)
