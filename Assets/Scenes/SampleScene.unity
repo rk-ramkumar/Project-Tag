@@ -1099,6 +1099,7 @@ GameObject:
   - component: {fileID: 4133740795026780588}
   - component: {fileID: 428862821607566812}
   - component: {fileID: 7571623196104951585}
+  - component: {fileID: 7571623196104951586}
   m_Layer: 8
   m_Name: PlayerArmature
   m_TagString: Player
@@ -1790,6 +1791,26 @@ MonoBehaviour:
   BottomClamp: -30
   CameraAngleOverride: 0
   LockCameraPosition: 0
+--- !u!114 &7571623196104951586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428862821607566800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1beaf662037089a47a1409e43ab57637, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TPP.TPPInputs
+  move: {x: 0, y: 0}
+  look: {x: 0, y: 0}
+  jump: 0
+  sprint: 0
+  sprintMode: 0
+  analogMovement: 0
+  cursorLocked: 1
+  cursorInputForLook: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
