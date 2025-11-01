@@ -14,20 +14,20 @@ namespace TPP
     {
 
         [Header("Player")]
-        public float MoveSpeed = 2.0f;
-        public float SprintSpeed = 6.0f;
+        public float MoveSpeed = 6.0f;
+        public float SprintSpeed = 10.0f;
 
         [Range(0.0f, 0.3f)]
         public float RotationSmoothTime = 0.12f;
-        public float SpeedChangeRate = 10.0f;
+        public float SpeedChangeRate = 20.0f;
 
         public AudioClip LandingAudioClip;
         public AudioClip[] FootStepAudioClips;
         [Range(0, 1)] public float FootStepAudioVolume = 0.5f;
 
         [Space(10)]
-        public float JumpHeight = 1.2f;
-        public float Gravity = -15.0f;
+        public float JumpHeight = 1.8f;
+        public float Gravity = -22.0f;
 
         [Space(20)]
         [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
@@ -309,6 +309,26 @@ namespace TPP
             if (lfAngle < -360f) lfAngle += 360f;
             if (lfAngle > 360f) lfAngle -= 360f;
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
+        }
+
+        private void OnFootstep(AnimationEvent animationEvent)
+        {
+            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            {
+                if (FootStepAudioClips.Length > 0)
+                {
+                    var index = Random.Range(0, FootStepAudioClips.Length);
+                    AudioSource.PlayClipAtPoint(FootStepAudioClips[index], transform.TransformPoint(_controller.center), FootStepAudioVolume);
+                }
+            }
+        }
+
+        private void OnLand(AnimationEvent animationEvent)
+        {
+            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            {
+                AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootStepAudioVolume);
+            }
         }
     }
 }
