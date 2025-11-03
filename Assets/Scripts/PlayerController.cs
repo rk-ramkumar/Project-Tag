@@ -20,6 +20,7 @@ namespace TPP
         [Range(0.0f, 0.3f)]
         public float RotationSmoothTime = 0.12f;
         public float SpeedChangeRate = 20.0f;
+        public float DecelerationRate = 80.0f;
 
         public AudioClip LandingAudioClip;
         public AudioClip[] FootStepAudioClips;
@@ -196,7 +197,8 @@ namespace TPP
                 // note T in Lerp is clamped, so we don't need to clamp our speed
                 //_speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * SpeedChangeRate);
                 float target = targetSpeed * inputMagnitude;
-                _speed = Mathf.MoveTowards(currentHorizontalSpeed, target, SpeedChangeRate * Time.deltaTime);
+                float changeRate = targetSpeed < currentHorizontalSpeed ? DecelerationRate : SpeedChangeRate;
+                _speed = Mathf.MoveTowards(currentHorizontalSpeed, target, changeRate * Time.deltaTime);
 
             }
             else
@@ -311,6 +313,7 @@ namespace TPP
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
         }
 
+        // Methods called by animation events
         private void OnFootstep(AnimationEvent animationEvent)
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
