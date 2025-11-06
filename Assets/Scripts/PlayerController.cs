@@ -1,5 +1,6 @@
 using StarterAssets;
 using TMPro;
+using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -46,6 +47,7 @@ namespace TPP
         [Space(10)]
         [Header("Cinemachine")]
         public GameObject CinemachineCameraTarget;
+        public GameObject CinemachineCameraSource;
         public float TopClamp = 70.0f;
         public float BottomClamp = -30.0f;
         public float CameraAngleOverride = 0.0f;
@@ -331,6 +333,9 @@ namespace TPP
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootStepAudioVolume);
+                CinemachineBasicMultiChannelPerlin Cperlin = CinemachineCameraSource.GetComponent<CinemachineBasicMultiChannelPerlin>();
+                CinemachineImpulseSource ImpluseSource = GetComponent<CinemachineImpulseSource>();
+                ImpluseSource.GenerateImpulseWithForce(0.3f);
             }
         }
     }
