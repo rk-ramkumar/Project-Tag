@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -12,6 +13,7 @@ namespace TPP
         public Vector2 look;
         public bool jump;
         public bool sprint;
+        public bool dash;
 
         [Header("Movement Settings")]
         public bool analogMovement;
@@ -44,6 +46,11 @@ namespace TPP
             SprintInput(value.isPressed);
         }
 #endif
+        public void  OnDash(InputValue value)
+        {
+     
+            DashInput(value.isPressed);
+        } 
 
 
         public void MoveInput(Vector2 newMoveDirection)
@@ -56,6 +63,10 @@ namespace TPP
             look = newLookDirection;
         }
 
+        public void DashInput(bool newDashState)
+        {
+            dash = newDashState;
+        }
         public void JumpInput(bool newJumpState)
         {
             jump = newJumpState;

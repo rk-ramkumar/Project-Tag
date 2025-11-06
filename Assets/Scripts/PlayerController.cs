@@ -1,4 +1,5 @@
 using StarterAssets;
+using System;
 using TMPro;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
@@ -18,6 +19,16 @@ namespace TPP
         public float MoveSpeed = 6.0f;
         public float SprintSpeed = 10.0f;
 
+        [Header("Dash Settings")]
+        public float DashForce = 20f;
+        public float DashDuration = 0.2f;
+        public float DashCooldown = 2.0f;
+
+        private bool _isDashing = false;
+        private float _dashTimeRemaining = 0f;
+        private Vector3 _dashDirection;
+
+        [Space(10)]
         [Range(0.0f, 0.3f)]
         public float RotationSmoothTime = 0.12f;
         public float SpeedChangeRate = 20.0f;
@@ -64,6 +75,7 @@ namespace TPP
         private float _rotationVelocity;
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
+        private DateTime? _lastDashDT;
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
@@ -129,6 +141,7 @@ namespace TPP
             _hasAnimator = TryGetComponent(out _animator);
 
             GroundedCheck();
+            Dash();
             JumpAndGravity();
             Move();
         }
@@ -181,6 +194,11 @@ namespace TPP
 
         private void Move()
         {
+            if(_isDashing)
+            {
+                return;
+            }
+
             float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
             if (_input.move == Vector2.zero) targetSpeed = 0.0f;
@@ -240,6 +258,10 @@ namespace TPP
 
         private void JumpAndGravity()
         {
+            if(_isDashing)
+            {
+                return;
+            }
             if (Grounded)
             {
                 // reset the fall timeout timer
@@ -307,6 +329,56 @@ namespace TPP
             }
         }
 
+        private void Dash()
+        {
+            if ( _input.dash)
+            {
+                _input.dash = CanDash();
+                
+            }
+            // Start dash
+            if (_input.dash && !_isDashing)
+            {
+                _input.dash = false; // reset input
+                _isDashing = true;
+                _dashTimeRemaining = DashDuration;
+                _lastDashDT = DateTime.Now;
+
+                // dash direction = current forward
+                _dashDirection = transform.forward;
+            }
+
+            // Process ongoing dash
+            if (_isDashing)
+            {
+                float dashSpeed = DashForce / DashDuration; // speed per second
+                _controller.Move(_dashDirection * dashSpeed * Time.deltaTime);
+
+                _dashTimeRemaining -= Time.deltaTime;
+
+                if (_dashTimeRemaining <= 0)
+                {
+                    _isDashing = false;
+                    dashSpeed = DashForce;
+                }
+
+                if (_hasAnimator)
+                {
+                    _animator.SetFloat(_animIDSpeed, dashSpeed);
+                    _animator.SetFloat(_animIDMotionSpeed, dashSpeed / SprintSpeed);
+                }
+            }
+        }
+
+
+        private bool CanDash()
+        {
+            if (_lastDashDT == null)
+                return true;
+
+            return (DateTime.Now - _lastDashDT.Value).TotalSeconds >= DashCooldown;
+        }
+
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
 
@@ -322,7 +394,7 @@ namespace TPP
             {
                 if (FootStepAudioClips.Length > 0)
                 {
-                    var index = Random.Range(0, FootStepAudioClips.Length);
+                    var index = UnityEngine.Random.Range(0, FootStepAudioClips.Length);
                     AudioSource.PlayClipAtPoint(FootStepAudioClips[index], transform.TransformPoint(_controller.center), FootStepAudioVolume);
                 }
             }
