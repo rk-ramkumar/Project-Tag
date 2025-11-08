@@ -138,6 +138,7 @@ namespace TPP
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+            _lastDashDT = -DashCooldown;
         }
 
         void Update()
