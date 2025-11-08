@@ -1,5 +1,6 @@
 using StarterAssets;
 using System;
+using System.Collections;
 using TMPro;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
@@ -23,6 +24,7 @@ namespace TPP
         public float DashForce = 20f;
         public float DashDuration = 0.2f;
         public float DashCooldown = 2.0f;
+        public GameObject DashTrail;
 
         private bool _isDashing = false;
         private float _dashTimeRemaining = 0f;
@@ -75,7 +77,8 @@ namespace TPP
         private float _rotationVelocity;
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
-        private DateTime? _lastDashDT;
+        private float _lastDashDT;
+        private Coroutine _trailCoroutine;  
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
@@ -129,8 +132,8 @@ namespace TPP
             _playerInput = GetComponent<PlayerInput>();
 #endif
             AssignAnimatorIDs();
-
-
+            SetDashTrail(false);
+            
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
@@ -331,35 +334,28 @@ namespace TPP
 
         private void Dash()
         {
-            if ( _input.dash)
+            if (_input.dash)
             {
                 _input.dash = CanDash();
                 
             }
             // Start dash
-            if (_input.dash && !_isDashing)
+            if (_input.dash)
             {
-                _input.dash = false; // reset input
-                _isDashing = true;
-                _dashTimeRemaining = DashDuration;
-                _lastDashDT = DateTime.Now;
-
-                // dash direction = current forward
-                _dashDirection = transform.forward;
+                StartDash();
             }
 
             // Process ongoing dash
             if (_isDashing)
             {
                 float dashSpeed = DashForce / DashDuration; // speed per second
-                _controller.Move(_dashDirection * dashSpeed * Time.deltaTime);
+                _controller.Move(dashSpeed * Time.deltaTime * _dashDirection);
 
                 _dashTimeRemaining -= Time.deltaTime;
 
                 if (_dashTimeRemaining <= 0)
                 {
-                    _isDashing = false;
-                    dashSpeed = DashForce;
+                    EndDash();
                 }
 
                 if (_hasAnimator)
@@ -370,13 +366,37 @@ namespace TPP
             }
         }
 
-
-        private bool CanDash()
+        private void StartDash()
         {
-            if (_lastDashDT == null)
-                return true;
+            _input.dash = false; // reset input
+            _isDashing = true;
+            _dashTimeRemaining = DashDuration;
+            _lastDashDT = Time.time;
 
-            return (DateTime.Now - _lastDashDT.Value).TotalSeconds >= DashCooldown;
+            // dash direction = current forward
+            _dashDirection = transform.forward;
+            if (_trailCoroutine != null)
+                StopCoroutine(_trailCoroutine);
+            SetDashTrail(true);
+        }
+
+        private void EndDash()
+        {
+            _isDashing = false;
+            _trailCoroutine = StartCoroutine(ResetTrailEffect());
+        }
+
+        private bool CanDash() => !(_isDashing || Time.time < _lastDashDT + DashCooldown);
+
+        private void SetDashTrail(bool active )
+        {
+            if (DashTrail != null) DashTrail.SetActive(active);
+        }
+
+        private IEnumerator ResetTrailEffect()
+        {
+            yield return new WaitForSeconds(0.5f);
+            SetDashTrail(false);
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
