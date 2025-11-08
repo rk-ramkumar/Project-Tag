@@ -90,6 +90,7 @@ namespace TPP
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
+        private int _animIDDash;
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -161,6 +162,7 @@ namespace TPP
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+            _animIDDash = Animator.StringToHash("Dash");
         }
         private void GroundedCheck()
         {
@@ -362,6 +364,7 @@ namespace TPP
                 {
                     _animator.SetFloat(_animIDSpeed, dashSpeed);
                     _animator.SetFloat(_animIDMotionSpeed, dashSpeed / SprintSpeed);
+
                 }
             }
         }
@@ -375,9 +378,15 @@ namespace TPP
 
             // dash direction = current forward
             _dashDirection = transform.forward;
+
             if (_trailCoroutine != null)
                 StopCoroutine(_trailCoroutine);
             SetDashTrail(true);
+
+            if (_hasAnimator && Grounded)
+            {
+                _animator.SetTrigger(_animIDDash);
+            }
         }
 
         private void EndDash()
