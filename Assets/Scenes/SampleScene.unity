@@ -1990,7 +1990,7 @@ MonoBehaviour:
   MoveSpeed: 6
   SprintSpeed: 10
   DashForce: 8
-  DashDuration: 0.2
+  DashDuration: 0.1
   DashCooldown: 2
   DashTrail: {fileID: 1257274476420506515}
   RotationSmoothTime: 0.12

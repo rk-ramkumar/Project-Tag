@@ -364,7 +364,7 @@ namespace TPP
                 if (_hasAnimator)
                 {
                     _animator.SetFloat(_animIDSpeed, dashSpeed);
-                    _animator.SetFloat(_animIDMotionSpeed, dashSpeed / SprintSpeed);
+                    //_animator.SetFloat(_animIDMotionSpeed, dashSpeed / SprintSpeed);
 
                 }
             }
