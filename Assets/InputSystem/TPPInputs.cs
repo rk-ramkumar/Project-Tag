@@ -14,6 +14,7 @@ namespace TPP
         public bool jump;
         public bool sprint;
         public bool dash;
+        public bool crouch;
 
         [Header("Movement Settings")]
         public bool analogMovement;
@@ -52,6 +53,10 @@ namespace TPP
             DashInput(value.isPressed);
         } 
 
+        public void OnCrouch(InputValue value)
+        {
+            CrouchInput(value.isPressed);
+        }
 
         public void MoveInput(Vector2 newMoveDirection)
         {
@@ -79,6 +84,14 @@ namespace TPP
                 sprint = !sprint;
             }
             
+        }
+
+        public void CrouchInput(bool newCrouchState)
+        {
+            if (newCrouchState)
+            {
+                crouch = !crouch;
+            }
         }
 
         private void OnApplicationFocus(bool hasFocus)

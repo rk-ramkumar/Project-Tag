@@ -19,6 +19,7 @@ namespace TPP
         [Header("Player")]
         public float MoveSpeed = 6.0f;
         public float SprintSpeed = 10.0f;
+        public float CrouchSpeed = 4.0f;
 
         [Header("Dash Settings")]
         public float DashForce = 20f;
@@ -78,7 +79,10 @@ namespace TPP
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
         private float _lastDashDT;
-        private Coroutine _trailCoroutine;  
+        private Coroutine _trailCoroutine;
+        private bool _crouched = false;
+        private float _standHeight;
+        private float _crouchHeight = 1.0f;
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
@@ -91,6 +95,7 @@ namespace TPP
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
         private int _animIDDash;
+        private int _animIDCrouched;
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -139,6 +144,7 @@ namespace TPP
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
             _lastDashDT = -DashCooldown;
+            _standHeight = _controller.height;
         }
 
         void Update()
@@ -147,6 +153,7 @@ namespace TPP
 
             GroundedCheck();
             Dash();
+            Crouch();
             JumpAndGravity();
             Move();
         }
@@ -164,6 +171,7 @@ namespace TPP
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
             _animIDDash = Animator.StringToHash("Dash");
+            _animIDCrouched = Animator.StringToHash("Crouched");
         }
         private void GroundedCheck()
         {
@@ -205,7 +213,12 @@ namespace TPP
                 return;
             }
 
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            float targetSpeed = _input.sprint ? SprintSpeed : _crouched ? CrouchSpeed : MoveSpeed;
+
+            if (_input.sprint)
+            {
+                _input.crouch = false;
+            }
 
             if (_input.move == Vector2.zero) targetSpeed = 0.0f;
 
@@ -259,9 +272,26 @@ namespace TPP
             {
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+                _animator.SetBool(_animIDCrouched, _input.crouch);
             }
         }
 
+        private void Crouch()
+        {
+            if (_input.crouch && !_crouched)
+            {
+               _crouched = true;
+               _controller.height = _crouchHeight;
+               _controller.center = new(0, _crouchHeight / 2.0f, 0);
+            }
+
+            if (!_input.crouch)
+            {
+                _crouched = false;
+                _controller.height = _standHeight;
+                _controller.center = new(0, _standHeight / 2.0f, 0);
+            }
+        }
         private void JumpAndGravity()
         {
             if(_isDashing)
@@ -289,6 +319,7 @@ namespace TPP
                 // Jump
                 if (_input.jump && _jumpTimeoutDelta <= 0.0f)
                 {
+                    _input.crouch = false;
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 
@@ -396,7 +427,7 @@ namespace TPP
             _trailCoroutine = StartCoroutine(ResetTrailEffect());
         }
 
-        private bool CanDash() => !(_isDashing || Time.time < _lastDashDT + DashCooldown);
+        private bool CanDash() => !(_isDashing || _input.crouch || Time.time < _lastDashDT + DashCooldown );
 
         private void SetDashTrail(bool active )
         {
