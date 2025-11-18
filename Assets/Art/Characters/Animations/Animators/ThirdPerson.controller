@@ -1032,7 +1032,7 @@ BlendTree:
   m_BlendParameter: Speed
   m_BlendParameterY: Speed
   m_MinThreshold: 0
-  m_MaxThreshold: 10
+  m_MaxThreshold: 14
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 0

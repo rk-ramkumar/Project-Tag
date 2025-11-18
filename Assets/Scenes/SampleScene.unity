@@ -256,6 +256,11 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!4 &588499055 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
+  m_PrefabInstance: {fileID: 1756473305}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,6 +413,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ff920b9f74dc11945ab6a5328201453f, type: 3}
       propertyPath: m_Name
       value: Stylized Male
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ff920b9f74dc11945ab6a5328201453f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1239261520112362177, guid: ff920b9f74dc11945ab6a5328201453f, type: 3}
       propertyPath: m_IsActive
@@ -1063,6 +1072,67 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50a0925b0c22af146a2d15615f815a1c, type: 3}
+--- !u!1001 &1756473305
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1060721795226285930}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
+      propertyPath: m_Name
+      value: Office Guy
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
 --- !u!1 &1818188357
 GameObject:
   m_ObjectHideFlags: 0
@@ -1179,79 +1249,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8063073397250431797, guid: f0271df749728104eac22c3d897fd8ce, type: 3}
   m_PrefabInstance: {fileID: 4089183421604451862}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1918479652
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -6.088473
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.00000011920929
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 4.672043
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -1859801204408367421, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -1859801204408367421, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: 'm_Materials.Array.data[1]'
-      value: 
-      objectReference: {fileID: 2100000, guid: a893f62ba2c9c2f488501e922a75cc58, type: 2}
-    - target: {fileID: 919132149155446097, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: m_Name
-      value: Office Guy
-      objectReference: {fileID: 0}
-    - target: {fileID: 3047021228998167511, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3047021228998167511, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
-      propertyPath: 'm_Materials.Array.data[1]'
-      value: 
-      objectReference: {fileID: 2100000, guid: a893f62ba2c9c2f488501e922a75cc58, type: 2}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
 --- !u!4 &43997151408216646
 Transform:
   m_ObjectHideFlags: 0
@@ -1432,6 +1429,7 @@ Transform:
   - {fileID: 120762726}
   - {fileID: 5405932824576365708}
   - {fileID: 43997151408216646}
+  - {fileID: 588499055}
   m_Father: {fileID: 1521201137529789696}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1257274476420506515
@@ -2125,7 +2123,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 428862821607566800}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: ff920b9f74dc11945ab6a5328201453f, type: 3}
+  m_Avatar: {fileID: 9000000, guid: bc170287a73931c45b8c6cabbaf05131, type: 3}
   m_Controller: {fileID: 9100000, guid: 72927d28f532c614a8b84647246e3de0, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
@@ -2562,4 +2560,3 @@ SceneRoots:
   - {fileID: 1740137565}
   - {fileID: 1818188361}
   - {fileID: 879165602}
-  - {fileID: 1918479652}
