@@ -24,39 +24,40 @@ namespace TPP
         public bool cursorInputForLook = true;
 
 #if ENABLE_INPUT_SYSTEM
-        public void OnMove(InputValue value)
+        public void OnMove(InputAction.CallbackContext  value)
         {
-            MoveInput(value.Get<Vector2>());
+            MoveInput(value.ReadValue<Vector2>());
         }
 
-        public void OnLook(InputValue value)
+        public void OnLook(InputAction.CallbackContext  value)
         {
             if (cursorInputForLook)
             {
-                LookInput(value.Get<Vector2>());
+                LookInput(value.ReadValue<Vector2>());
             }
         }
 
-        public void OnJump(InputValue value)
+        public void OnJump(InputAction.CallbackContext  value)
         {
-            JumpInput(value.isPressed);
+            JumpInput(value.performed);
         }
 
-        public void OnSprint(InputValue value)
+        public void OnSprint(InputAction.CallbackContext  value)
         {
-            SprintInput(value.isPressed);
+            SprintInput(value.performed);
         }
 #endif
-        public void  OnDash(InputValue value)
+        public void OnDash(InputAction.CallbackContext  value)
         {
      
-            DashInput(value.isPressed);
+            DashInput(value.performed);
         } 
 
-        public void OnCrouch(InputValue value)
+        public void OnCrouch(InputAction.CallbackContext value)
         {
-            CrouchInput(value.isPressed);
+            CrouchInput(value.performed);
         }
+        
 
         public void MoveInput(Vector2 newMoveDirection)
         {
