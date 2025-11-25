@@ -55,7 +55,7 @@ namespace TPP
 
         public void OnCrouch(InputAction.CallbackContext value)
         {
-            CrouchInput(value.performed);
+            CrouchInput(value.performed);   
         }
         
 
@@ -89,10 +89,7 @@ namespace TPP
 
         public void CrouchInput(bool newCrouchState)
         {
-            if (newCrouchState)
-            {
-                crouch = !crouch;
-            }
+            crouch = newCrouchState;
         }
 
         private void OnApplicationFocus(bool hasFocus)

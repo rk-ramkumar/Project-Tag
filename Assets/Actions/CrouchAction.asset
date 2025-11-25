@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93d08b790f5da994aba17cf17733a050, type: 3}
+  m_Name: CrouchAction
+  m_EditorClassIdentifier: Assembly-CSharp::CrouchAction
+  crouchHeight: 1
+  transitionSpeed: 10
+  speedMultiplier: 0.8
+  animBool: Crouched
+  toggleMode: 1
+  disableSprint: 1
+  disableJump: 0
