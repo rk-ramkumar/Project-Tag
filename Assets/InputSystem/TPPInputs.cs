@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.DebugUI;
 #endif
 
 namespace TPP
@@ -15,6 +16,7 @@ namespace TPP
         public bool sprint;
         public bool dash;
         public bool crouch;
+        public bool sprintToogleMode = true;
 
         [Header("Movement Settings")]
         public bool analogMovement;
@@ -80,13 +82,21 @@ namespace TPP
 
         public void SprintInput(bool newSprintState)
         {
-            if(newSprintState)
+            if (sprintToogleMode)
             {
-                sprint = !sprint;
+                if (newSprintState)
+                {
+                    SetSprint(!sprint);
+                }
             }
-            
+            else
+            {
+                SetSprint(newSprintState);
+            }
+
         }
 
+        public void SetSprint(bool newSprint) => sprint = newSprint;
         public void CrouchInput(bool newCrouchState)
         {
             crouch = newCrouchState;

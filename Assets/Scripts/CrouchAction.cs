@@ -63,7 +63,7 @@ namespace TPP
                 _isCrouched = TPPInputs.crouch;
             }
 
-            if(CrouchDefinition.disableSprint && TPPInputs.sprint)
+            if (CrouchDefinition.disableSprint && TPPInputs.sprint && TPPInputs.move != Vector2.zero)
             {
                 _isCrouched = false;
                 TPPInputs.crouch = false;
