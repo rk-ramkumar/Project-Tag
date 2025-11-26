@@ -1,4 +1,4 @@
-using StarterAssets;
+﻿using StarterAssets;
 using System;
 using System.Collections;
 using TMPro;
@@ -33,6 +33,7 @@ namespace TPP
         [Space(10)]
         [Range(0.0f, 0.3f)]
         public float RotationSmoothTime = 0.12f;
+        public float SprintRotationSmoothTime = 0.14f;
         public float SpeedChangeRate = 20.0f;
         public float DecelerationRate = 80.0f;
 
@@ -202,62 +203,67 @@ namespace TPP
 
         private void Move()
         {
-            if(_isDashing)
-            {
+            if (_isDashing)
                 return;
-            }
 
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            // Determine base speed
+            bool isSprinting = _input.sprint && _input.move != Vector2.zero;
+            float targetSpeed = isSprinting ? SprintSpeed : MoveSpeed;
             targetSpeed *= ExternalCrouchSpeedMultiplier;
 
-            if (_input.move == Vector2.zero) targetSpeed = 0.0f;
+            // Zero speed if no input
+            if (_input.move == Vector2.zero)
+                targetSpeed = 0f;
 
-            //a reference to the players current horizontal velocity
-            float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
+            // Current horizontal velocity
+            float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0f, _controller.velocity.z).magnitude;
 
-            float speedOffset = 0.1f;
+            // Smooth acceleration / deceleration
             float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1.0f;
 
-            //accelerate or decelerate to target speed
-            if (currentHorizontalSpeed < targetSpeed - speedOffset || 
-                currentHorizontalSpeed > targetSpeed + speedOffset)
-            {
-                // creates curved result rather than a linear one giving a more organic speed change
-                // note T in Lerp is clamped, so we don't need to clamp our speed
-                //_speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * SpeedChangeRate);
-                float target = targetSpeed * inputMagnitude;
-                float changeRate = targetSpeed < currentHorizontalSpeed ? DecelerationRate : SpeedChangeRate;
-                _speed = Mathf.MoveTowards(currentHorizontalSpeed, target, changeRate * Time.deltaTime);
+            float target = targetSpeed * inputMagnitude;
 
-            }
-            else
-            {
-                _speed = targetSpeed;
-            }
+            float changeRate =
+                target < currentHorizontalSpeed ? DecelerationRate : SpeedChangeRate;
 
+            // Apply movement momentum
+            _speed = Mathf.MoveTowards(currentHorizontalSpeed, target, changeRate * Time.deltaTime);
+
+            // Animation blend
             _animationBlend = Mathf.MoveTowards(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
             if (_animationBlend < 0.01f) _animationBlend = 0f;
 
-            Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
+            // Movement direction
+            Vector3 inputDirection = new Vector3(_input.move.x, 0f, _input.move.y).normalized;
 
-            // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-            // if there is a move input rotate player when the player is moving
-            if(_input.move != Vector2.zero)
+            // ROTATION HANDLING
+            if (_input.move != Vector2.zero)
             {
-                _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
+                // Sprinting has slightly slower rotation → prevents zig-zag abuse
+                float rotationSmooth = isSprinting ? SprintRotationSmoothTime : RotationSmoothTime;
+
+                // Calculate target rotation
+                _targetRotation =
+                    Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
                     _mainCamera.transform.eulerAngles.y;
 
-                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
-                    RotationSmoothTime);
+                float rotation = Mathf.SmoothDampAngle(
+                    transform.eulerAngles.y,
+                    _targetRotation,
+                    ref _rotationVelocity,
+                    rotationSmooth
+                );
 
-                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-
+                transform.rotation = Quaternion.Euler(0f, rotation, 0f);
             }
 
-            // move the player
-            _controller.Move(transform.forward.normalized * (_speed * Time.deltaTime) +
-                new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+            // Apply movement
+            _controller.Move(
+                transform.forward.normalized * (_speed * Time.deltaTime) +
+                new Vector3(0f, _verticalVelocity, 0f) * Time.deltaTime
+            );
 
+            // Animator
             if (_hasAnimator)
             {
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
