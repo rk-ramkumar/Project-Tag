@@ -5,7 +5,6 @@ namespace TPP
     public class CrouchAction : ActionComponent
     {
         public CrouchDefinition CrouchDefinition;
-        public CharacterController Controller;
 
         private bool _isCrouched = false;
         private float _currentHeight;
@@ -18,13 +17,10 @@ namespace TPP
         {
 
             base.Awake();
-            Controller = GetComponent<CharacterController>();
 
-            if(Controller != null )
-            {
-                _standHeight = Controller.height;
-                _standCenter = Controller.center;
-            }
+            _standHeight = cc.height;
+            _standCenter = cc.center;
+
         }
 
 
@@ -40,9 +36,9 @@ namespace TPP
         {
             if(CrouchDefinition.toggleMode)
             {
-                if (TPPInputs.crouch)
+                if (input.crouch)
                 {
-                    TPPInputs.crouch = false;
+                    input.crouch = false;
                     if(_isCrouched)
                     {
                         if (CanStandUp())
@@ -60,21 +56,21 @@ namespace TPP
             }
             else
             {
-                _isCrouched = TPPInputs.crouch;
+                _isCrouched = input.crouch;
             }
 
-            if (CrouchDefinition.disableSprint && TPPInputs.sprint && TPPInputs.move != Vector2.zero)
+            if (CrouchDefinition.disableSprint && input.sprint && input.move != Vector2.zero)
             {
                 _isCrouched = false;
-                TPPInputs.crouch = false;
+                input.crouch = false;
             }
 
 
             if (_isCrouched && CrouchDefinition.disableSprint)
-                Player.SetSprint(false);
+                player.SetSprint(false);
 
             
-            Player.BlockJump(_isCrouched && CrouchDefinition.disableJump);
+            player.BlockJump(_isCrouched && CrouchDefinition.disableJump);
         }
 
         private void SmoothHeightTransition()
@@ -87,8 +83,8 @@ namespace TPP
                 Time.deltaTime * CrouchDefinition.transitionSpeed
             );
 
-            Controller.height = _currentHeight;
-            Controller.center = new Vector3(
+            cc.height = _currentHeight;
+            cc.center = new Vector3(
                 _standCenter.x,
                 _currentHeight / 2f,
                 _standCenter.z
@@ -97,18 +93,18 @@ namespace TPP
 
         private void ApplyAnimator()
         {
-            if (Player.AnimatorExists && CrouchDefinition.animBool != "")
-                    Player.Animator.SetBool(CrouchDefinition.animBool, _isCrouched);
+            if (player.AnimatorExists && CrouchDefinition.animBool != "")
+                    player.Animator.SetBool(CrouchDefinition.animBool, _isCrouched);
         }
 
-        private void ApplyMovementSlowdown() => Player.ExternalCrouchSpeedMultiplier = _isCrouched ? CrouchDefinition.speedMultiplier : 1f;
+        private void ApplyMovementSlowdown() => player.ExternalCrouchSpeedMultiplier = _isCrouched ? CrouchDefinition.speedMultiplier : 1f;
 
         private bool CanStandUp()
         {
             float checkDistance = _standHeight - CrouchDefinition.crouchHeight;
-            Vector3 origin = transform.position + Vector3.up * (Controller.height * 0.5f);
+            Vector3 origin = transform.position + Vector3.up * (cc.height * 0.5f);
 
-            return !Physics.SphereCast(origin, Controller.radius * 0.9f, Vector3.up, out RaycastHit hit, checkDistance, Player.GroundLayers);
+            return !Physics.SphereCast(origin, cc.radius * 0.9f, Vector3.up, out RaycastHit hit, checkDistance, player.GroundLayers);
         }
     }
 

@@ -3,11 +3,12 @@ using UnityEngine;
 
 namespace TPP
 {
-    [RequireComponent(typeof(PlayerController))]    
+    [RequireComponent(typeof(PlayerController), typeof(CharacterController))]    
+
     public abstract class ActionComponent : MonoBehaviour
     {
-        protected PlayerController Player;
-        protected TPPInputs TPPInputs;
+        protected PlayerController player;
+        protected TPPInputs input;
         protected CharacterController cc;
         protected bool Active = false;
         protected float LastUsedTime = -999f;
@@ -15,8 +16,8 @@ namespace TPP
 
         public virtual void Awake()
         {
-            Player = GetComponent<PlayerController>();
-            TPPInputs = GetComponent<TPPInputs>();
+            player = GetComponent<PlayerController>();
+            input = GetComponent<TPPInputs>();
             cc = GetComponent<CharacterController>();
 
         }
