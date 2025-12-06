@@ -70,6 +70,7 @@ namespace TPP
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
+        CinemachineImpulseSource _cinemachineImpulseSource;
 
         // player
         private float _speed;
@@ -80,6 +81,19 @@ namespace TPP
         private float _terminalVelocity = 53.0f;
         private float _lastDashDT;
         private Coroutine _trailCoroutine;
+        enum State
+        {
+            Idle,
+            Walk,
+            Sprint,
+            Crouch,
+            Dashing,
+            Jumping,
+            Falling,
+            MidAir
+        }
+
+        private State _currentState;
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
@@ -132,6 +146,7 @@ namespace TPP
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<TPPInputs>();
+            _cinemachineImpulseSource = GetComponent<CinemachineImpulseSource>();
 #if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
 #endif
@@ -152,6 +167,7 @@ namespace TPP
             Dash();
             JumpAndGravity();
             Move();
+            SetState();
         }
 
         void LateUpdate()
@@ -432,6 +448,50 @@ namespace TPP
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
         }
 
+
+        private void SetState()
+        {
+            // Highest priority: dashing
+            if (_isDashing)
+            {
+                _currentState = State.Dashing;
+                return;
+            }
+
+            if (!Grounded)
+            {
+                _currentState = (_verticalVelocity > 0.1f) ? State.Jumping : State.Falling;
+                return;
+            }
+
+            // Grounded states
+            bool hasMoveInput = _input.move.sqrMagnitude > 0.0001f;
+            bool isSprinting = _input.sprint && hasMoveInput;
+            bool isCrouching = _input.crouch;
+            float epsilon = 0.01f;
+
+            if (isCrouching)
+            {
+                _currentState = State.Crouch;
+                return;
+            }
+
+            if (!hasMoveInput || _speed <= epsilon)
+            {
+                _currentState = State.Idle;
+                return;
+            }
+
+            // Use explicit sprint intent rather than raw speed comparison
+            if (isSprinting)
+            {
+                _currentState = State.Sprint;
+                return;
+            }
+
+            _currentState = State.Walk;
+        }
+
         // Methods called by animation events
         private void OnFootstep(AnimationEvent animationEvent)
         {
@@ -450,9 +510,7 @@ namespace TPP
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootStepAudioVolume);
-                CinemachineBasicMultiChannelPerlin Cperlin = CinemachineCameraSource.GetComponent<CinemachineBasicMultiChannelPerlin>();
-                CinemachineImpulseSource ImpluseSource = GetComponent<CinemachineImpulseSource>();
-                ImpluseSource.GenerateImpulseWithForce(0.3f);
+                _cinemachineImpulseSource.GenerateImpulseWithForce(0.3f);
             }
         }
 
