@@ -8,13 +8,17 @@ namespace TPP
     {
         protected PlayerController Player;
         protected TPPInputs TPPInputs;
+        protected CharacterController cc;
         protected bool Active = false;
         protected float LastUsedTime = -999f;
+
 
         public virtual void Awake()
         {
             Player = GetComponent<PlayerController>();
-            TPPInputs = GetComponent<TPPInputs>();  
+            TPPInputs = GetComponent<TPPInputs>();
+            cc = GetComponent<CharacterController>();
+
         }
 
         public virtual bool CanUse() { return true; }
