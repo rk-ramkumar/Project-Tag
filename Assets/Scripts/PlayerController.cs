@@ -1,6 +1,7 @@
 ﻿using StarterAssets;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
@@ -92,8 +93,9 @@ namespace TPP
             Falling,
             MidAir
         }
-
         private State _currentState;
+        // movement blocking:
+        private readonly HashSet<object> _movementBlockers = new HashSet<object>();
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
@@ -219,8 +221,9 @@ namespace TPP
 
         private void Move()
         {
-            if (_isDashing)
-                return;
+            if (_movementBlockers.Count > 0) return;
+
+            if (_isDashing) return;
 
             // Determine base speed
             bool isSprinting = _input.sprint && _input.move != Vector2.zero;
@@ -520,6 +523,12 @@ namespace TPP
 
         public bool AnimatorExists => _hasAnimator;
         public Animator Animator => _animator;
+
+        public void SetMovementBlocked(bool blocked, object source)
+        {
+            if (blocked) _movementBlockers.Add(source);
+            else _movementBlockers.Remove(source);
+        }
 
     };    
 }

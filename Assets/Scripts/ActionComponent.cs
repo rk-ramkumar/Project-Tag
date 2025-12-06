@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace TPP
 {
-    [RequireComponent(typeof(PlayerController), typeof(CharacterController))]    
+    [RequireComponent(typeof(PlayerController), typeof(CharacterController))]
 
     public abstract class ActionComponent : MonoBehaviour
     {

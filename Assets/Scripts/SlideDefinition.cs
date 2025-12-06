@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="SlideAction", menuName = "TPP/Action/CrouchAction")]
+[CreateAssetMenu(fileName ="SlideAction", menuName = "TPP/Action/SlideAction")]
 public class SlideDefinition : ScriptableObject
 {
     [Header("Timing and Movement")]
