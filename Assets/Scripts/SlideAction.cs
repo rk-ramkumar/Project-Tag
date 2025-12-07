@@ -36,6 +36,7 @@ namespace TPP
 
             if (!sliding && input != null)
             {
+                        Debug.Log(input.crouch);
                 if(input.crouch && (!def.requiresSprint || input.sprint))
                 {
                     if(VelocityMagnitude >= def.minSpeed)
@@ -84,7 +85,7 @@ namespace TPP
             if (def.sfx) AudioSource.PlayClipAtPoint(def.sfx, transform.position);
             if (!string.IsNullOrEmpty(def.animTrigger) && player.AnimatorExists)
             {
-                player.Animator.SetTrigger(def.animTrigger);
+                player.Animator.SetBool(def.animTrigger, true);
             }
         }
         public void RunSlide()
@@ -122,7 +123,10 @@ namespace TPP
                     crouchAction.ForceEnterCrouch();
                 }
             }
-
+            if (!string.IsNullOrEmpty(def.animTrigger) && player.AnimatorExists)
+            {
+                player.Animator.SetBool(def.animTrigger, false);
+            }
             // smooth recover capsule back to standing (we lerp in coroutine to keep Update simple)
             StartCoroutine(RecoverCapsule());
         }
