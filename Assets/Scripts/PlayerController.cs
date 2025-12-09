@@ -38,6 +38,11 @@ namespace TPP
         public float SpeedChangeRate = 20.0f;
         public float DecelerationRate = 80.0f;
 
+        // tuning
+        public float AnimatorDampTime = 0.08f;          // use Animator.SetFloat(...dampTime...)
+        public float InputSmoothTime = 0.06f;           // smooth raw input -> animator axes
+
+
         public AudioClip LandingAudioClip;
         public AudioClip[] FootStepAudioClips;
         [Range(0, 1)] public float FootStepAudioVolume = 0.5f;
@@ -81,6 +86,11 @@ namespace TPP
         float _terminalVelocity = 53.0f;
         float _lastDashDT;
         Coroutine _trailCoroutine;
+        float _animVelX;
+        float _animVelZ;
+        float _animVelXVelocity;
+        float _animVelZVelocity;
+
         enum State
         {
             Idle,
@@ -296,9 +306,14 @@ namespace TPP
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
 
+                // Smooth using SmoothDamp (keeps continuity even with abrupt changes)
+                _animVelX = Mathf.SmoothDamp(_animVelX, _input.move.x, ref _animVelXVelocity, InputSmoothTime);
+                _animVelZ = Mathf.SmoothDamp(_animVelZ, _input.move.y, ref _animVelZVelocity, InputSmoothTime);
+
+                // For X/Z axes use the smoothed values, and also scale by normalized speed
                 float velNorm = Mathf.InverseLerp(0f, MoveSpeed, _speed);
-                _animator.SetFloat(_animIDVelocityX, _input.move.x * velNorm);
-                _animator.SetFloat(_animIDVelocityZ, _input.move.y * velNorm);
+                _animator.SetFloat(_animIDVelocityX, _animVelX * velNorm, AnimatorDampTime, Time.deltaTime);
+                _animator.SetFloat(_animIDVelocityZ, _animVelZ * velNorm, AnimatorDampTime, Time.deltaTime);
             }
         }
 
