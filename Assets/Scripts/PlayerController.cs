@@ -27,9 +27,9 @@ namespace TPP
         public float DashCooldown = 2.0f;
         public GameObject DashTrail;
 
-        private bool _isDashing = false;
-        private float _dashTimeRemaining = 0f;
-        private Vector3 _dashDirection;
+        bool _isDashing = false;
+        float _dashTimeRemaining = 0f;
+        Vector3 _dashDirection;
 
         [Space(10)]
         [Range(0.0f, 0.3f)]
@@ -69,19 +69,18 @@ namespace TPP
         public bool LockCameraPosition = false;
 
         // cinemachine
-        private float _cinemachineTargetYaw;
-        private float _cinemachineTargetPitch;
+        float _cinemachineTargetYaw;
+        float _cinemachineTargetPitch;
         CinemachineImpulseSource _cinemachineImpulseSource;
 
         // player
-        private float _speed;
-        private float _animationBlend;
-        private float _targetRotation = 0.0f;
-        private float _rotationVelocity;
-        private float _verticalVelocity;
-        private float _terminalVelocity = 53.0f;
-        private float _lastDashDT;
-        private Coroutine _trailCoroutine;
+        float _speed;
+        float _animationBlend;
+        float _rotationVelocity;
+        float _verticalVelocity;
+        float _terminalVelocity = 53.0f;
+        float _lastDashDT;
+        Coroutine _trailCoroutine;
         enum State
         {
             Idle,
@@ -93,34 +92,36 @@ namespace TPP
             Falling,
             MidAir
         }
-        private State _currentState;
+        State _currentState;
         // movement blocking:
-        private readonly HashSet<object> _movementBlockers = new HashSet<object>();
+        readonly HashSet<object> _movementBlockers = new HashSet<object>();
 
         // timeout deltatime
-        private float _jumpTimeoutDelta;
-        private float _fallTimeoutDelta;
+        float _jumpTimeoutDelta;
+        float _fallTimeoutDelta;
 
         // animation IDs
-        private int _animIDSpeed;
-        private int _animIDGrounded;
-        private int _animIDJump;
-        private int _animIDFreeFall;
-        private int _animIDMotionSpeed;
-        private int _animIDDash;
+        int _animIDSpeed;
+        int _animIDGrounded;
+        int _animIDJump;
+        int _animIDFreeFall;
+        int _animIDMotionSpeed;
+        int _animIDDash;
+        int _animIDVelocityZ;
+        int _animIDVelocityX;
 
 #if ENABLE_INPUT_SYSTEM
-        private PlayerInput _playerInput;
+        PlayerInput _playerInput;
 #endif
-        private Animator _animator;
-        private CharacterController _controller;
-        private TPPInputs _input;
-        private GameObject _mainCamera;
+        Animator _animator;
+        CharacterController _controller;
+        TPPInputs _input;
+        GameObject _mainCamera;
 
-        private const float _threshold = 0.01f;
+        const float _threshold = 0.01f;
 
-        private bool _hasAnimator;
-        private bool _jumpBlocked;
+        bool _hasAnimator;
+        bool _jumpBlocked;
         public float ExternalCrouchSpeedMultiplier = 1f;
 
         private bool IsCurrentDeviceMouse
@@ -134,7 +135,7 @@ namespace TPP
 #endif
             }
         }
-        private void Awake()
+       void Awake()
         {
             if (_mainCamera == null)
             {
@@ -185,6 +186,8 @@ namespace TPP
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
             _animIDDash = Animator.StringToHash("Dash");
+            _animIDVelocityZ = Animator.StringToHash("VelocityZ");
+            _animIDVelocityX = Animator.StringToHash("VelocityX");
         }
         private void GroundedCheck()
         {
@@ -217,6 +220,11 @@ namespace TPP
 
             CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
                 _cinemachineTargetYaw, 0.0f);
+
+            if (_currentState == State.Walk)
+            {
+                transform.rotation = Quaternion.Euler(0f, _cinemachineTargetYaw, 0f);
+            }
         }
 
         private void Move()
@@ -252,41 +260,45 @@ namespace TPP
             _animationBlend = Mathf.MoveTowards(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
             if (_animationBlend < 0.01f) _animationBlend = 0f;
 
-            // Movement direction
-            Vector3 inputDirection = new Vector3(_input.move.x, 0f, _input.move.y).normalized;
+            // Camera - relative movement vector
+            Vector3 rawInput = new(_input.move.x, 0f, _input.move.y);
+            Quaternion camYaw = Quaternion.Euler(0f, _mainCamera.transform.eulerAngles.y, 0f);
+            Vector3 worldInput = camYaw * rawInput;         // camera-relative direction
+            Vector3 moveDir = worldInput.normalized;
 
-            // ROTATION HANDLING
-            if (_input.move != Vector2.zero)
+
+            // Rotation handling
+            float rotationSmooth = isSprinting ? SprintRotationSmoothTime : RotationSmoothTime;
+
+            if (isSprinting)
             {
-                // Sprinting has slightly slower rotation → prevents zig-zag abuse
-                float rotationSmooth = isSprinting ? SprintRotationSmoothTime : RotationSmoothTime;
-
-                // Calculate target rotation
-                _targetRotation =
-                    Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
-                    _mainCamera.transform.eulerAngles.y;
-
-                float rotation = Mathf.SmoothDampAngle(
-                    transform.eulerAngles.y,
-                    _targetRotation,
-                    ref _rotationVelocity,
-                    rotationSmooth
-                );
-
+                // Rotate smoothly to face movement direction (for forward/back/diagonal)
+                float targetRotation = Mathf.Atan2(moveDir.x, moveDir.z) * Mathf.Rad2Deg;
+                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref _rotationVelocity, rotationSmooth);
+                transform.rotation = Quaternion.Euler(0f, rotation, 0f);
+            }
+            else if (Mathf.Abs(_input.move.x) > 0.01f) // Strafing detection: treat as strafing when lateral input is meaningful
+            {
+                float desiredYaw = _mainCamera.transform.eulerAngles.y;
+                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, desiredYaw, ref _rotationVelocity, rotationSmooth);
                 transform.rotation = Quaternion.Euler(0f, rotation, 0f);
             }
 
-            // Apply movement
-            _controller.Move(
-                transform.forward.normalized * (_speed * Time.deltaTime) +
-                new Vector3(0f, _verticalVelocity, 0f) * Time.deltaTime
-            );
+            // Movement vector to feed CharacterController (use actual _speed)
+            Vector3 horizontalMove = _speed * Time.deltaTime * moveDir;
+
+            // Apply movement + vertical
+            _controller.Move(horizontalMove + new Vector3(0f, _verticalVelocity, 0f) * Time.deltaTime);
 
             // Animator
             if (_hasAnimator)
             {
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+
+                float velNorm = Mathf.InverseLerp(0f, MoveSpeed, _speed);
+                _animator.SetFloat(_animIDVelocityX, _input.move.x * velNorm);
+                _animator.SetFloat(_animIDVelocityZ, _input.move.y * velNorm);
             }
         }
 
