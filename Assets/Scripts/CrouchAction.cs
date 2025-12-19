@@ -26,6 +26,7 @@ namespace TPP
 
         private void Update()
         {
+            if(input.sprint) return;
             HandleCrouchInput();
             SmoothHeightTransition();
             ApplyAnimator();

@@ -1628,6 +1628,7 @@ GameObject:
   - component: {fileID: 7571623196104951587}
   - component: {fileID: 7571623196104951588}
   - component: {fileID: 7571623196104951589}
+  - component: {fileID: 7571623196104951590}
   m_Layer: 8
   m_Name: PlayerArmature
   m_TagString: Player
@@ -2691,6 +2692,8 @@ MonoBehaviour:
   SprintRotationSmoothTime: 0.14
   SpeedChangeRate: 20
   DecelerationRate: 20
+  AnimatorDampTime: 0.08
+  InputSmoothTime: 0.06
   LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
   FootStepAudioClips:
   - {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
@@ -2803,7 +2806,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 428862821607566800}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ca4e3d14916ff54fb7c2a387fc05fc4, type: 3}
   m_Name: 
@@ -2816,12 +2819,28 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 428862821607566800}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fdb384453e5661b4c85af3638b6abcbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TPP.SlideAction
   def: {fileID: 11400000, guid: d64d4d7b594733640918a0d659a84160, type: 2}
+--- !u!114 &7571623196104951590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428862821607566800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac864d4a3565bf74c8721ba6ceedfcdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TPP.v1.ActionHub
+  playerController: {fileID: 7571623196104951585}
+  characterController: {fileID: 428862821607566810}
+  inputs: {fileID: 7571623196104951586}
+  _actions: []
 --- !u!1 &7839300268080145521
 GameObject:
   m_ObjectHideFlags: 0
