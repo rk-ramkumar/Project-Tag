@@ -16,10 +16,17 @@ namespace TPP
         Jump,
         Shoot
     }
-    [System.Serializable] public class ToggleEntry
+    [System.Serializable]
+    public struct ToggleEntry
     {
         public ToggleName toggleName;
         public bool isEnabled;
+
+        public ToggleEntry(ToggleName toggleName, bool isEnabled)
+        {
+            this.toggleName = toggleName;
+            this.isEnabled = isEnabled;
+        }
     }
     public class TPPInputs : MonoBehaviour
     {
@@ -42,8 +49,8 @@ namespace TPP
         // This will show in Inspector
         public List<ToggleEntry> toggleSettings = new()
         {
-        new() { toggleName = ToggleName.Sprint, isEnabled = false },
-        new() { toggleName = ToggleName.Crouch, isEnabled = true }
+            new(ToggleName.Sprint, false),
+            new(ToggleName.Crouch, true)
         };
 
         Dictionary<ToggleName, (Func<bool> getter, Action<bool> setter)> stateHandlers;
