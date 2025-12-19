@@ -2746,6 +2746,11 @@ MonoBehaviour:
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
+  toggleSettings:
+  - toggleName: 0
+    isEnabled: 1
+  - toggleName: 1
+    isEnabled: 1
 --- !u!114 &7571623196104951587
 MonoBehaviour:
   m_ObjectHideFlags: 0

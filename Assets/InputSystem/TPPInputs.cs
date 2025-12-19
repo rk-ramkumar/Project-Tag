@@ -1,12 +1,26 @@
 using System;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
-using static UnityEngine.Rendering.DebugUI;
+
 #endif
 
 namespace TPP
 {
+    public enum ToggleName
+    {
+        Sprint,
+        Crouch,
+        Jump,
+        Shoot
+    }
+    [System.Serializable] public class ToggleEntry
+    {
+        public ToggleName toggleName;
+        public bool isEnabled;
+    }
     public class TPPInputs : MonoBehaviour
     {
         [Header("Character Input Values")]
@@ -16,7 +30,7 @@ namespace TPP
         public bool sprint;
         public bool dash;
         public bool crouch;
-        public bool sprintToogleMode = true;
+        public bool sprintToogleMode = true;      
 
         [Header("Movement Settings")]
         public bool analogMovement;
@@ -25,7 +39,30 @@ namespace TPP
         public bool cursorLocked = true;
         public bool cursorInputForLook = true;
 
+        // This will show in Inspector
+        public List<ToggleEntry> toggleSettings = new()
+        {
+        new() { toggleName = ToggleName.Sprint, isEnabled = false },
+        new() { toggleName = ToggleName.Crouch, isEnabled = true }
+        };
+
+        Dictionary<ToggleName, (Func<bool> getter, Action<bool> setter)> stateHandlers;
+
 #if ENABLE_INPUT_SYSTEM
+        void Start()
+        {
+            InitializeHandlers();
+        }
+
+        void InitializeHandlers()
+        {
+            stateHandlers = new Dictionary<ToggleName, (Func<bool>, Action<bool>)>
+            {
+                { ToggleName.Sprint, (() => sprint, (val) => sprint = val) },
+                { ToggleName.Crouch, (() => crouch, (val) => crouch = val) }
+            };
+        }
+
         public void OnMove(InputAction.CallbackContext  value)
         {
             MoveInput(value.ReadValue<Vector2>());
@@ -80,27 +117,9 @@ namespace TPP
             jump = newJumpState;
         }
 
-        public void SprintInput(bool newSprintState)
-        {
-            if (sprintToogleMode)
-            {
-                if (newSprintState)
-                {
-                    SetSprint(!sprint);
-                }
-            }
-            else
-            {
-                SetSprint(newSprintState);
-            }
-
-        }
-
-        public void SetSprint(bool newSprint) => sprint = newSprint;
-        public void CrouchInput(bool newCrouchState)
-        {
-            crouch = newCrouchState;
-        }
+        public void SprintInput(bool newSprintState) => ProcessToggleableInput(ToggleName.Sprint, newSprintState);
+        
+        public void CrouchInput(bool newCrouchState) => ProcessToggleableInput(ToggleName.Crouch, newCrouchState);
 
         private void OnApplicationFocus(bool hasFocus)
         {
@@ -110,6 +129,35 @@ namespace TPP
         private void SetCursorState(bool newState)
         {
             Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
+        }
+
+        // Helper method to check a toggle
+        public bool IsToggleEnabled(ToggleName name)
+        {
+            foreach (var entry in toggleSettings)
+            {
+                if (entry.toggleName == name)
+                    return entry.isEnabled;
+            }
+            return false;
+        }
+
+        public void ProcessToggleableInput(ToggleName stateName, bool newInputState)
+        {
+
+            var (getter, setter) = stateHandlers[stateName];
+
+            if (IsToggleEnabled(stateName))
+            {
+                if (newInputState)
+                {
+                    setter.Invoke(!getter()); // Toggle mode: flip state on key press
+                }
+            }
+            else
+            {
+               setter(newInputState); // Hold mode: direct state mapping
+            }
         }
     }
 
