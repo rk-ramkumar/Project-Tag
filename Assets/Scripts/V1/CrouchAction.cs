@@ -3,7 +3,7 @@
 namespace TPP.v1
 {
     [CreateAssetMenu(fileName = "CrouchAction", menuName = "TPP/V1/CrouchAction")]
-    public class CrouchAction : Action
+    public class CrouchAction : ActionDefinition
     {
         [Header("Crouch dimensions")]
         public float crouchHeight = 1f;

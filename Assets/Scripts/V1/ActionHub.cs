@@ -11,8 +11,8 @@ namespace TPP.v1
         public PlayerController playerController;
         public CharacterController characterController;
         public TPPInputs inputs;
-        [SerializeField] List<Action> _actions = new();
-        Action _active;
+        [SerializeField] List<ActionDefinition> _actions = new();
+        ActionDefinition _active;
         float _lastUsedTime = -999f;
 
         // Use this for initialization

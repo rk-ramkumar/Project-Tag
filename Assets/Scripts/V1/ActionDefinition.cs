@@ -3,7 +3,7 @@
 namespace TPP.v1
 {
     [CreateAssetMenu(fileName = "Action", menuName = "TPP/V1/Actions")]
-    public abstract class Action : ScriptableObject
+    public class ActionDefinition : ScriptableObject
     {
         public string actionName;
         public float duration = 0.0f;
