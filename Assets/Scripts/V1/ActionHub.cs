@@ -14,6 +14,7 @@ namespace TPP.v1
         [SerializeField] List<ActionDefinition> _actions = new();
         ActionDefinition _active;
         float _lastUsedTime = -999f;
+        ActionDefinition currentAction;
 
         // Use this for initialization
         void Start()
@@ -24,14 +25,65 @@ namespace TPP.v1
 
             foreach (var action in _actions)
             {
-                action.OnStart(this);
+                action.Register(this);
             }
         }
 
-        // Update is called once per frame
-        void Update()
+        public bool TryStart(ActionDefinition action)
         {
+            if (!action.CanStart())
+                return false;
 
+            // No action running → start immediately
+            if (currentAction == null)
+            {
+                StartAction(action);
+                return true;
+            }
+
+            // Same action already active
+            if (currentAction == action)
+                return false;
+
+            // Priority check
+            if (action.priority > currentAction.priority)
+            {
+                // Can we interrupt the current action?
+                //if (!currentAction.interruptible)
+                //    return false;
+
+                InterruptCurrent();
+                StartAction(action);
+                return true;
+            }
+
+            // Lower or equal priority → denied
+            return false;
         }
+
+        private void StartAction(ActionDefinition action)
+        {
+            currentAction = action;
+            action.StartInternal();
+        }
+
+        private void InterruptCurrent()
+        {
+            if (currentAction == null) return;
+
+            var old = currentAction;
+            currentAction = null;
+            old.InterruptInternal();
+        }
+
+        public void Stop(ActionDefinition action)
+        {
+            if (currentAction != action) return;
+
+            currentAction = null;
+            action.StopInternal();
+        }
+
+
     }
 }

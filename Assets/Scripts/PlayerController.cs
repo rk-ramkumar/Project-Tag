@@ -10,6 +10,18 @@ using UnityEngine.InputSystem;
 
 namespace TPP
 {
+
+    public enum PlayerState
+    {
+        Idle,
+        Walk,
+        Sprint,
+        Crouch,
+        Dashing,
+        Jumping,
+        Falling,
+        MidAir
+    }
     [RequireComponent(typeof(CharacterController))]
 #if ENABLE_INPUT_SYSTEM
     [RequireComponent(typeof(PlayerInput))]
@@ -91,18 +103,8 @@ namespace TPP
         float _animVelXVelocity;
         float _animVelZVelocity;
 
-        enum State
-        {
-            Idle,
-            Walk,
-            Sprint,
-            Crouch,
-            Dashing,
-            Jumping,
-            Falling,
-            MidAir
-        }
-        State _currentState;
+        
+        PlayerState _currentState;
         // movement blocking:
         readonly HashSet<object> _movementBlockers = new HashSet<object>();
 
@@ -231,7 +233,7 @@ namespace TPP
             CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
                 _cinemachineTargetYaw, 0.0f);
 
-            if (_currentState == State.Walk)
+            if (_currentState == PlayerState.Walk)
             {
                 transform.rotation = Quaternion.Euler(0f, _cinemachineTargetYaw, 0f);
             }
@@ -484,13 +486,13 @@ namespace TPP
             // Highest priority: dashing
             if (_isDashing)
             {
-                _currentState = State.Dashing;
+                _currentState = PlayerState.Dashing;
                 return;
             }
 
             if (!Grounded)
             {
-                _currentState = (_verticalVelocity > 0.1f) ? State.Jumping : State.Falling;
+                _currentState = (_verticalVelocity > 0.1f) ? PlayerState.Jumping : PlayerState.Falling;
                 return;
             }
 
@@ -502,24 +504,24 @@ namespace TPP
 
             if (isCrouching)
             {
-                _currentState = State.Crouch;
+                _currentState = PlayerState.Crouch;
                 return;
             }
 
             if (!hasMoveInput || _speed <= epsilon)
             {
-                _currentState = State.Idle;
+                _currentState = PlayerState.Idle;
                 return;
             }
 
             // Use explicit sprint intent rather than raw speed comparison
             if (isSprinting)
             {
-                _currentState = State.Sprint;
+                _currentState = PlayerState.Sprint;
                 return;
             }
 
-            _currentState = State.Walk;
+            _currentState = PlayerState.Walk;
         }
 
         // Methods called by animation events
@@ -550,6 +552,7 @@ namespace TPP
 
         public bool AnimatorExists => _hasAnimator;
         public Animator Animator => _animator;
+        public PlayerState CurrentState => _currentState;
 
         public void SetMovementBlocked(bool blocked, object source)
         {

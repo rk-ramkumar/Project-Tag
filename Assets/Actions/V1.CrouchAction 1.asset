@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea3abe6d6ffe526488b5e47dabd24df0, type: 3}
   m_Name: V1.CrouchAction 1
   m_EditorClassIdentifier: Assembly-CSharp::TPP.v1.CrouchAction
-  actionName: CrouchAction
+  actionName: 1
   duration: 0
+  priority: 10
   animName: Crouched
   vfxPrefab: {fileID: 0}
   sfx: {fileID: 0}
-  toggleMode: 1
   disableSprint: 1
   disableJump: 0
+  blocksMovement: 0
   crouchHeight: 1
   transitionSpeed: 10
   speedMultiplier: 0.55
