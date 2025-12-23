@@ -37,7 +37,6 @@ namespace TPP
         public bool sprint;
         public bool dash;
         public bool crouch;
-        public bool sprintToogleMode = true;
 
         public static event Action<bool> OnCrouchChanged;
 
@@ -163,10 +162,7 @@ namespace TPP
 
             if (IsToggleEnabled(stateName))
             {
-                if (newInputState)
-                {
-                    setter.Invoke(!getter()); // Toggle mode: flip state on key press
-                }
+               setter.Invoke(!getter()); // Toggle mode: flip state on key press
             }
             else
             {
