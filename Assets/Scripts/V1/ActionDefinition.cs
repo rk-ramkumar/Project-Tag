@@ -47,17 +47,6 @@ namespace TPP.v1
             characterController = hub.GetComponent<CharacterController>();
             inputs = hub.GetComponent<TPPInputs>();
         }
-
-        public virtual void TryUse()
-        {
-            if (!CanStart()) return;
-            Use();
-        }
-
-        protected virtual void Use()
-        {
-        }
-
         public bool TryStart()
         {
             return hub.TryStart(this);

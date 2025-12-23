@@ -43,14 +43,17 @@ namespace TPP.v1
 
             if (_isCrouched)
             {
-                TryStart();
+                if (!TryStart())
+                {
+                    inputs.CrouchInput(false);
+                }
             }
             else if(!CanStandUp()){
                 inputs.CrouchInput(true);
             }
             else
             {
-                StopInternal();
+                hub.Stop(this);
             }
         }
 
@@ -74,6 +77,7 @@ namespace TPP.v1
             if (playerController.AnimatorExists && animName != "")
                 playerController.Animator.SetBool(animName, _isCrouched);
         }
+        private void ApplyMovementSlowdown(float multiplier) => playerController.ExternalCrouchSpeedMultiplier = multiplier;
         private bool CanStandUp()
         {
             float checkDistance = _originalHeight - crouchHeight;
@@ -84,28 +88,20 @@ namespace TPP.v1
 
         public override bool CanStart()
         {
-            return base.CanStart() && playerController.Grounded && playerController.CurrentState != PlayerState.Sprint;
-        }
-
-        public override void TryUse()
-        {
-            base.TryUse();
-        }
-
-        protected override void Use()
-        {
-            base.Use();
+            return base.CanStart() && playerController.Grounded && !inputs.sprint;
         }
         protected override void OnStop()
         {
             SmoothHeightTransition();
             ApplyAnimator();
+            ApplyMovementSlowdown(1f);
         }
 
         protected override void OnStart()
         {
             SmoothHeightTransition();
             ApplyAnimator();
+            ApplyMovementSlowdown(speedMultiplier);
         }
     }
 }
