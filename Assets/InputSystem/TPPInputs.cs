@@ -37,7 +37,9 @@ namespace TPP
         public bool sprint;
         public bool dash;
         public bool crouch;
-        public bool sprintToogleMode = true;      
+        public bool sprintToogleMode = true;
+
+        public static event Action<bool> OnCrouchChanged;
 
         [Header("Movement Settings")]
         public bool analogMovement;
@@ -66,7 +68,12 @@ namespace TPP
             stateHandlers = new Dictionary<ToggleName, (Func<bool>, Action<bool>)>
             {
                 { ToggleName.Sprint, (() => sprint, (val) => sprint = val) },
-                { ToggleName.Crouch, (() => crouch, (val) => crouch = val) }
+                { ToggleName.Crouch, 
+                    (() => crouch, (val) => {
+                        crouch = val;
+                        OnCrouchChanged?.Invoke(crouch);
+                    }) 
+                }
             };
         }
 
@@ -125,7 +132,7 @@ namespace TPP
         }
 
         public void SprintInput(bool newSprintState) => ProcessToggleableInput(ToggleName.Sprint, newSprintState);
-        
+
         public void CrouchInput(bool newCrouchState) => ProcessToggleableInput(ToggleName.Crouch, newCrouchState);
 
         private void OnApplicationFocus(bool hasFocus)
