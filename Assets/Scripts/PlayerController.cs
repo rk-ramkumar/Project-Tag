@@ -85,6 +85,8 @@ namespace TPP
         public float CameraAngleOverride = 0.0f;
         public bool LockCameraPosition = false;
 
+        [Header("UI")]
+        public TextMeshProUGUI textMeshProUGUI;
         // cinemachine
         float _cinemachineTargetYaw;
         float _cinemachineTargetPitch;
@@ -183,6 +185,7 @@ namespace TPP
             JumpAndGravity();
             Move();
             SetState();
+            UpdateStateUI();
         }
 
         void LateUpdate()
@@ -522,6 +525,13 @@ namespace TPP
             }
 
             _currentState = PlayerState.Walk;
+        }
+
+        void UpdateStateUI()
+        {
+            if(!textMeshProUGUI) return;
+            
+            textMeshProUGUI.text = _currentState.ToString();            
         }
 
         // Methods called by animation events
