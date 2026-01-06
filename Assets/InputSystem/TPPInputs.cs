@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TPP.ActionSystem;
 using Unity.VisualScripting;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
@@ -55,12 +56,21 @@ namespace TPP
         };
 
         Dictionary<ToggleName, (Func<bool> getter, Action<bool> setter)> stateHandlers;
+        ActionManager _actionManager;
 
 #if ENABLE_INPUT_SYSTEM
         void Start()
         {
+            _actionManager = GetComponent<ActionManager>();
             InitializeHandlers();
         }
+
+        #region Public API
+
+        public Vector2 GetMoveInput() => move;
+        public Vector2 GetLookInput() => look;
+
+        #endregion
 
         void InitializeHandlers()
         {
@@ -103,6 +113,7 @@ namespace TPP
         {
      
             DashInput(value.performed);
+            if (dash) _actionManager.RequestAction(ActionID.Dash);
         } 
 
         public void OnCrouch(InputAction.CallbackContext value)
