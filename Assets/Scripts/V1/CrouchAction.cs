@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Windows;
 
 namespace TPP.v1
 {
@@ -25,7 +26,7 @@ namespace TPP.v1
             base.Register(gameObject);
             _originalHeight = gameObject.characterController.height;
             _originalCenter = gameObject.characterController.center;
-            
+
         }
         void OnEnable()
         {
@@ -48,8 +49,10 @@ namespace TPP.v1
                     inputs.CrouchInput(false);
                 }
             }
-            else if(!CanStandUp()){
-                inputs.CrouchInput(true);
+            else if (!CanStandUp()) {
+                inputs.crouch = true;
+                _isCrouched = true;
+
             }
             else
             {
@@ -70,7 +73,7 @@ namespace TPP.v1
                 _currentHeight = x;
                 characterController.height = _currentHeight;
                 characterController.center = new Vector3(_originalCenter.x, _currentHeight / 2f, _originalCenter.z);
-                }, targetHeight, duration);
+            }, targetHeight, duration);
         }
         private void ApplyAnimator()
         {
@@ -82,13 +85,16 @@ namespace TPP.v1
         {
             float checkDistance = _originalHeight - crouchHeight;
             Vector3 origin = playerController.transform.position + Vector3.up * (characterController.height * 0.5f);
-
-            return !Physics.SphereCast(origin, characterController.radius * 0.9f, Vector3.up, out RaycastHit hit, checkDistance, playerController.GroundLayers);
+            return !Physics.SphereCast(origin, characterController.radius * 0.9f, Vector3.up, out _, checkDistance, playerController.GroundLayers);
         }
 
         public override bool CanStart()
         {
-            return base.CanStart() && playerController.Grounded && !inputs.sprint;
+            return (
+                base.CanStart()
+                && playerController.Grounded 
+                && (inputs.move == Vector2.zero || !inputs.sprint)
+                );
         }
         protected override void OnStop()
         {

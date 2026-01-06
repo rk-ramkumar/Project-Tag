@@ -1461,7 +1461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4afa82ae3200b82408d605c3dbdd1e38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineRotateWithFollowTarget
-  Damping: 0.2
+  Damping: -7
 --- !u!1001 &1740137565
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1851,6 +1851,7 @@ GameObject:
   - component: {fileID: 7571623196104951588}
   - component: {fileID: 7571623196104951589}
   - component: {fileID: 7571623196104951590}
+  - component: {fileID: 7571623196104951591}
   m_Layer: 8
   m_Name: PlayerArmature
   m_TagString: Player
@@ -3059,7 +3060,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 428862821607566800}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac864d4a3565bf74c8721ba6ceedfcdd, type: 3}
   m_Name: 
@@ -3069,6 +3070,21 @@ MonoBehaviour:
   inputs: {fileID: 7571623196104951586}
   _actions:
   - {fileID: 11400000, guid: 4634f608dc6340d4d96936ac1d8b3102, type: 2}
+--- !u!114 &7571623196104951591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428862821607566800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65da4058e96bc954db1b1c21ceaf44dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TPP.ActionSystem.ActionManager
+  _actionDatabase: {fileID: 11400000, guid: d8b27931078a54b4a85eac2a637d2cb3, type: 2}
+  _debugLog: 1
+  _activeActions: []
 --- !u!1 &7839300268080145521
 GameObject:
   m_ObjectHideFlags: 0

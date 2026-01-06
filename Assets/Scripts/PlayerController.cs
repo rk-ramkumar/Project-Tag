@@ -181,7 +181,7 @@ namespace TPP
             _hasAnimator = TryGetComponent(out _animator);
 
             GroundedCheck();
-            Dash();
+            //Dash();
             JumpAndGravity();
             Move();
             SetState();
@@ -285,7 +285,7 @@ namespace TPP
             // Rotation handling
             float rotationSmooth = isSprinting ? SprintRotationSmoothTime : RotationSmoothTime;
 
-            if (isSprinting)
+            if (isSprinting || _currentState == PlayerState.Crouch)
             {
                 // Rotate smoothly to face movement direction (for forward/back/diagonal)
                 float targetRotation = Mathf.Atan2(moveDir.x, moveDir.z) * Mathf.Rad2Deg;
@@ -563,6 +563,8 @@ namespace TPP
         public bool AnimatorExists => _hasAnimator;
         public Animator Animator => _animator;
         public PlayerState CurrentState => _currentState;
+
+        public Vector3 Velocity { get; internal set; }
 
         public void SetMovementBlocked(bool blocked, object source)
         {

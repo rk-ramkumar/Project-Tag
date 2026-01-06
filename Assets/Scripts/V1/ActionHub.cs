@@ -12,9 +12,10 @@ namespace TPP.v1
         public CharacterController characterController;
         public TPPInputs inputs;
         [SerializeField] List<ActionDefinition> _actions = new();
-        ActionDefinition _active;
-        float _lastUsedTime = -999f;
+        //ActionDefinition _active;
+        //float _lastUsedTime = -999f;
         ActionDefinition currentAction;
+        static int count = 0;
 
         // Use this for initialization
         void Start()
@@ -27,6 +28,20 @@ namespace TPP.v1
             {
                 action.Register(this);
             }
+        }
+
+        void OnEnable()
+        {
+            Debug.Log($"Hub OnEnable: {count}");
+            count++;
+         
+        }
+
+        void OnDisable()
+        {
+            Debug.Log($"Hub OnDisable: {count}");
+            count--;
+            
         }
 
         public bool TryStart(ActionDefinition action)
