@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47ac7e3b2cc4e940b6b7fb17ddf5b46, type: 3}
+  m_Name: DashAction
+  m_EditorClassIdentifier: Assembly-CSharp::TPP.ActionSystem.DashAction
+  _actionID: 4
+  _priority: 200
+  _actionFlags: 2
+  _duration: 0.5
+  _cooldown: 0.3
+  _inputBufferTime: 0.1
+  _isInterruptible: 1
+  _canRunConcurrently: 0
+  _animationClip: {fileID: -203655887218126122, guid: 918dfcda46526124f809719567ea300d, type: 3}
+  _animationTransitionTime: 0.1
+  _useRootMotion: 0
+  _startVFX: {fileID: 0}
+  _loopVFX: {fileID: 0}
+  _stopVFX: {fileID: 0}
+  _startSFX: {fileID: 0}
+  _loopSFX: {fileID: 0}
+  _stopSFX: {fileID: 0}
+  _sfxVolume: 1
+  _dashSpeed: 50
+  _dashDuration: 0.3
+  _dashCooldown: 0.3
+  _speedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _allowAirDash: 1
+  _maxAirDashes: 1
+  _airDashSpeedMultiplier: 0.8
+  _dashTrailPrefab: {fileID: 8597731318025692521, guid: ae6bdf3417a5d6047a559654858dac31, type: 3}
+  _trailDuration: 0.5
