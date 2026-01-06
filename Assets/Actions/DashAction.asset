@@ -31,7 +31,7 @@ MonoBehaviour:
   _stopSFX: {fileID: 0}
   _sfxVolume: 1
   _dashSpeed: 50
-  _dashDuration: 0.3
+  _dashDuration: 5
   _dashCooldown: 0.3
   _speedCurve:
     serializedVersion: 2

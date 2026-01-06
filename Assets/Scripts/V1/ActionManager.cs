@@ -58,10 +58,12 @@ namespace TPP.ActionSystem
             {
                 var action = _activeActions[i];
                 action.UpdateAction(deltaTime);
-                
+
                 // Check if action should be removed
+                Debug.Log($"OUT: {!IsActionActive(action)}");
                 if (!IsActionActive(action))
                 {
+                    Debug.Log("Ss");
                     RemoveAction(action, false);
                 }
             }
@@ -328,7 +330,8 @@ namespace TPP.ActionSystem
         {
             // This would check if the action is still valid
             // Could check timers, conditions, etc.
-            return true; // Simplified
+            if(action.IsActive) return true;
+            return action.IsOnCooldown; // Simplified
         }
         
         private void UpdateContext(float deltaTime)

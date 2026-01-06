@@ -4,6 +4,7 @@
 
 using DG.Tweening;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace TPP.ActionSystem
@@ -196,12 +197,11 @@ namespace TPP.ActionSystem
                 Debug.Log($"{_actionID} action already in Use");
                 return false;
             }
-            if (_cooldownTimer > 0)
+            if (IsOnCooldown)
             {
                 Debug.Log($"{_actionID} action in Cooldown. Use after {_cooldownTimer}s");
                 return false;
             };
-            if (_isComplete && _duration > 0) return false;
             return true;
         }
 
@@ -226,6 +226,7 @@ namespace TPP.ActionSystem
                 // Update cooldown
                 if (_cooldownTimer > 0)
                 {
+                    Debug.Log($"CoolDown Started. ReUse in {_cooldownTimer}s");
                     _cooldownTimer -= deltaTime;
                 }
                 return;
@@ -328,7 +329,6 @@ namespace TPP.ActionSystem
         {
             if (_animator != null && _animationClip != null)
             {
-                Debug.Log("S");
                 _animator.PlayAnimation(_animationClip.name, _animationTransitionTime);
             }
 
@@ -424,6 +424,12 @@ namespace TPP.ActionSystem
             public Vector3 Normal;
             public Collider Collider;
         }
+
+        #region Public Api
+        public bool IsOnCooldown => _cooldownTimer > 0;
+        public bool IsActive => _isActive;
+        #endregion
+
     }
 
     // ==============================================
@@ -481,7 +487,6 @@ namespace TPP.ActionSystem
 
             if (_animationHashes.TryGetValue(stateName, out int hash))
             {
-                Debug.Log($"{hash}, {stateName}");
                 _animator.CrossFade(hash, transitionTime);
                 _currentState = stateName;
             }
