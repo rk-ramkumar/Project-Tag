@@ -60,10 +60,8 @@ namespace TPP.ActionSystem
                 action.UpdateAction(deltaTime);
 
                 // Check if action should be removed
-                Debug.Log($"OUT: {!IsActionActive(action)}");
                 if (!IsActionActive(action))
                 {
-                    Debug.Log("Ss");
                     RemoveAction(action, false);
                 }
             }

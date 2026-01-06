@@ -31,7 +31,7 @@ MonoBehaviour:
   _stopSFX: {fileID: 0}
   _sfxVolume: 1
   _dashSpeed: 50
-  _dashDuration: 5
+  _dashDuration: 0.3
   _dashCooldown: 0.3
   _speedCurve:
     serializedVersion: 2
@@ -61,4 +61,4 @@ MonoBehaviour:
   _maxAirDashes: 1
   _airDashSpeedMultiplier: 0.8
   _dashTrailPrefab: {fileID: 8597731318025692521, guid: ae6bdf3417a5d6047a559654858dac31, type: 3}
-  _trailDuration: 0.5
+  _trailDuration: 0

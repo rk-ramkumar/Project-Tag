@@ -1,10 +1,4 @@
-// ==============================================
-// INTERFACES
-// ==============================================
-
-using DG.Tweening;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace TPP.ActionSystem
@@ -226,7 +220,6 @@ namespace TPP.ActionSystem
                 // Update cooldown
                 if (_cooldownTimer > 0)
                 {
-                    Debug.Log($"CoolDown Started. ReUse in {_cooldownTimer}s");
                     _cooldownTimer -= deltaTime;
                 }
                 return;
@@ -455,7 +448,7 @@ namespace TPP.ActionSystem
         {
             if (_animator == null)
                 _animator = GetComponent<Animator>();
-
+            
             if (_actionManager == null)
                 _actionManager = GetComponentInParent<ActionManager>();
 
