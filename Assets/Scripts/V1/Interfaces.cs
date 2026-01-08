@@ -480,7 +480,7 @@ namespace TPP.ActionSystem
 
             if (_animationHashes.TryGetValue(stateName, out int hash))
             {
-                _animator.CrossFade(hash, transitionTime);
+                _animator.CrossFade(hash, transitionTime); // Todo: Fix Layer warning
                 _currentState = stateName;
             }
             else

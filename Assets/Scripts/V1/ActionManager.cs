@@ -383,11 +383,13 @@ namespace TPP.ActionSystem
         
         #region Debug
         
+        GUIStyle style = new();
         private void OnGUI()
         {
             if (!_debugLog) return;
-            
             GUILayout.BeginArea(new Rect(10, 100, 10000, 10000));
+            style.fontSize = 32;
+            GUI.skin.label = style;
             GUILayout.Label("=== ACTION MANAGER DEBUG ===");
             GUILayout.Label($"Active Actions: {_activeActions.Count}");
             
